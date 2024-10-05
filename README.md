@@ -12,7 +12,7 @@ An API that forwards your http requests using a custom TLS fingerprint.
 2. `cd tls-api`
 3. `go run .`
 
-> [!NOTE]
+> [!TIP]
 > Configure the API server host and port through `.env` file.
 
 ## Documentation
@@ -29,26 +29,29 @@ x-tls-proxy
 x-tls-profile
 x-tls-client-timeout
 x-tls-follow-redirects
+x-tls-force-http1
 x-tls-with-random-extension-order
 x-tls-header-order
 x-tls-pseudo-header-order
 ```
 
+If the request requires a body, you can simply enter it as the request body, not in header.
+
 ### x-tls-url
 
-- Request URL
+- This header will configure what request url the request is going to use.
 
 Required: `true`
 
 ### x-tls-method
 
-- Request Method
+- This header will configure what request method the request is going to use
 
 Required: `true`
 
 ### x-tls-proxy
 
-- Proxy
+- This header will configure what proxy the request is going to use. 
 
 Required: `false`
 
@@ -61,6 +64,8 @@ Proxy will be formatted automatically.
 
 ### x-tls-profile
 
+This header will configure what TLS client profile the request is going to use.
+
 Required: `true`
 
 Type: `string`
@@ -69,40 +74,48 @@ See [profiles](https://github.com/bogdanfinn/tls-client/blob/18abae60034c6d510a1
 
 ### x-tls-client-timeout
 
-Request Timeout
+This header will configure what timeout the HTTP client is going to use.
 
 - Required: `true`
 - Default: `30`
 
 ### x-tls-follow-redirects
 
-Request Follow Redirects
+This header will configure if the request should follow redirects or not.
 
 - Required: `true`
 - Default: `true`
 
+### x-tls-force-http1
+
+This header will configure if the request should force HTTP1 use or not.
+
+- Required: `true`
+- Default: `false`
+
+
 ### x-tls-with-random-extension-order
 
-Random TLS Extension Order
+This header will configure if the client should randomize extensions order.
 
 - Required: `true`
 - Default: `true`
 
 ### x-tls-header-order
 
-TLS Header Keys Order
+This header will configure the header order of the request.
 
 - Required: `true`
 
-They must be provided as a string, all separate by a comma (`,`).
+They must be provided as a string, all separated by a comma (`,`).
 
 ### x-tls-pseudo-header-order
 
-TLS Pseudo Header Keys Order
+This header will configure the pseudo header order of the request.
 
 - Required: `true`
 
-They must be provided as a string, all separate by a comma (`,`).
+They must be provided as a string, all separated by a comma (`,`).
 
 ## Credits
 
