@@ -18,9 +18,8 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 ## 📚 Documentation
 
 ### Endpoint: `/tls/forward`
-### Method: `POST`
 
-### Headers:
+### Method: `POST`
 
 ### Headers:
 
