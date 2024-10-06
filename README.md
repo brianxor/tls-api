@@ -23,19 +23,19 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 
 ### Headers:
 
-| Header | Description |
-|--------|-------------|
-| `x-tls-url` | 🌐 Request URL |
-| `x-tls-method` | 📮 Request method |
-| `x-tls-proxy` | 🔄 Proxy settings |
-| `x-tls-profile` | 👤 TLS client profile |
-| `x-tls-client-timeout` | ⏱️ HTTP client timeout |
-| `x-tls-follow-redirects` | 🔀 Follow redirects |
-| `x-tls-force-http1` | 🔌 Force HTTP1 |
-| `x-tls-insecure-skip-verify` | 🚫 Skip SSL verification |
+| Header                              | Description                   |
+|-------------------------------------|-------------------------------|
+| `x-tls-url`                         | 🌐 Request URL                |
+| `x-tls-method`                      | 📮 Request method             |
+| `x-tls-proxy`                       | 🔄 Proxy settings             |
+| `x-tls-profile`                     | 👤 TLS client profile         |
+| `x-tls-client-timeout`              | ⏱️ HTTP client timeout        |
+| `x-tls-follow-redirects`            | 🔀 Follow redirects           |
+| `x-tls-force-http1`                 | 🔌 Force HTTP1                |
+| `x-tls-insecure-skip-verify`        | 🚫 Skip SSL verification      |
 | `x-tls-with-random-extension-order` | 🎲 Randomize extensions order |
-| `x-tls-header-order` | 📋 Header order |
-| `x-tls-pseudo-header-order` | 📑 Pseudo header order |
+| `x-tls-header-order`                | 📋 Header order               |
+| `x-tls-pseudo-header-order`         | 📑 Pseudo header order        |
 
 > [!NOTE]
 > If the request requires a body, you can simply enter it as the request body, not in header.
