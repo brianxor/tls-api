@@ -35,6 +35,7 @@ const (
 	tlsClientTimeoutHeaderKey            = "x-tls-client-timeout"
 	tlsFollowRedirectsHeaderKey          = "x-tls-follow-redirects"
 	tlsForceHttp1HeaderKey               = "x-tls-force-http1"
+	tlsInsecureSkipVerifyHeaderKey       = "x-tls-insecure-skip-verify"
 	tlsHeaderOrderHeaderKey              = "x-tls-header-order"
 	tlsPseudoHeaderOrderHeaderKey        = "x-tls-pseudo-header-order"
 	tlsWithRandomExtensionOrderHeaderKey = "x-tls-with-random-extension-order"
@@ -123,7 +124,6 @@ func doRequest(tlsData *tlsData) (*requestResponse, error) {
 	if len(tlsData.requestHeaders) > 0 {
 		for headerKey, headerValues := range tlsData.requestHeaders {
 			headerKeyLower := strings.ToLower(headerKey)
-
 			if headerKeyLower != "content-length" && !strings.HasPrefix(headerKeyLower, "x-tls") {
 				for _, value := range headerValues {
 					req.Header.Set(headerKey, value)
@@ -207,8 +207,13 @@ func buildTlsClient(tlsData *tlsData) (tlsclient.HttpClient, error) {
 	if tlsData.tlsWithRandomExtensionOrder {
 		tlsOptions = append(tlsOptions, tlsclient.WithRandomTLSExtensionOrder())
 	}
+
 	if tlsData.tlsForceHttp1 {
 		tlsOptions = append(tlsOptions, tlsclient.WithForceHttp1())
+	}
+
+	if tlsData.tlsInsecureSkipVerify {
+		tlsOptions = append(tlsOptions, tlsclient.WithInsecureSkipVerify())
 	}
 
 	if tlsData.tlsClientProxy != "" {
@@ -236,6 +241,7 @@ type tlsData struct {
 	tlsFollowRedirects          bool
 	tlsWithRandomExtensionOrder bool
 	tlsForceHttp1               bool
+	tlsInsecureSkipVerify       bool
 	tlsHeaderOrder              []string
 	tlsPseudoHeaderOrder        []string
 }
@@ -324,20 +330,6 @@ func extractTlsData(ctx fiber.Ctx) (*tlsData, error) {
 
 	tlsConfig.tlsFollowRedirects = tlsFollowRedirects
 
-	withRandomExtensionOrder := ctx.Get(tlsWithRandomExtensionOrderHeaderKey)
-
-	if withRandomExtensionOrder == "" {
-		return nil, fmt.Errorf("no %s", tlsWithRandomExtensionOrderHeaderKey)
-	}
-
-	tlsWithRandomExtensionOrder, err := strconv.ParseBool(withRandomExtensionOrder)
-
-	if err != nil {
-		return nil, fmt.Errorf("invalid random extension order: %s", withRandomExtensionOrder)
-	}
-
-	tlsConfig.tlsWithRandomExtensionOrder = tlsWithRandomExtensionOrder
-
 	forceHttp1 := ctx.Get(tlsForceHttp1HeaderKey)
 
 	if forceHttp1 == "" {
@@ -351,6 +343,34 @@ func extractTlsData(ctx fiber.Ctx) (*tlsData, error) {
 	}
 
 	tlsConfig.tlsForceHttp1 = tlsForceHttp1
+
+	insecureSkipVerify := ctx.Get(tlsInsecureSkipVerifyHeaderKey)
+
+	if insecureSkipVerify == "" {
+		return nil, fmt.Errorf("no %s", tlsInsecureSkipVerifyHeaderKey)
+	}
+
+	tlsInsecureSkipVerify, err := strconv.ParseBool(insecureSkipVerify)
+
+	if err != nil {
+		return nil, fmt.Errorf("invalid insecure skip verify: %s", insecureSkipVerify)
+	}
+
+	tlsConfig.tlsInsecureSkipVerify = tlsInsecureSkipVerify
+
+	withRandomExtensionOrder := ctx.Get(tlsWithRandomExtensionOrderHeaderKey)
+
+	if withRandomExtensionOrder == "" {
+		return nil, fmt.Errorf("no %s", tlsWithRandomExtensionOrderHeaderKey)
+	}
+
+	tlsWithRandomExtensionOrder, err := strconv.ParseBool(withRandomExtensionOrder)
+
+	if err != nil {
+		return nil, fmt.Errorf("invalid random extension order: %s", withRandomExtensionOrder)
+	}
+
+	tlsConfig.tlsWithRandomExtensionOrder = tlsWithRandomExtensionOrder
 
 	headerOrder := ctx.Get(tlsHeaderOrderHeaderKey)
 
