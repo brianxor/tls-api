@@ -93,6 +93,12 @@ This header will configure if the request should force HTTP1 use or not.
 - Required: `true`
 - Default: `false`
 
+### x-tls-insecure-skip-verify
+
+This header will configure if the client should skip SSL certificate verification.
+
+- Required: `true`
+- Default: `false`
 
 ### x-tls-with-random-extension-order
 
