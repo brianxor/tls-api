@@ -15,17 +15,19 @@ import (
 	"strings"
 )
 
-var supportedReqMethods = []string{
+var methodsWithoutRequestBody = []string{
 	http.MethodGet,
 	http.MethodHead,
+	http.MethodOptions,
+	http.MethodTrace,
+}
+
+var supportedReqMethods = append(methodsWithoutRequestBody,
 	http.MethodPost,
 	http.MethodPut,
 	http.MethodPatch,
 	http.MethodDelete,
-	http.MethodConnect,
-	http.MethodOptions,
-	http.MethodTrace,
-}
+)
 
 const (
 	tlsUrlHeaderKey                      = "x-tls-url"
@@ -124,10 +126,17 @@ func doRequest(tlsData *tlsData) (*requestResponse, error) {
 	if len(tlsData.requestHeaders) > 0 {
 		for headerKey, headerValues := range tlsData.requestHeaders {
 			headerKeyLower := strings.ToLower(headerKey)
-			if headerKeyLower != "content-length" && !strings.HasPrefix(headerKeyLower, "x-tls") {
-				for _, value := range headerValues {
-					req.Header.Set(headerKey, value)
-				}
+
+			isContentType := headerKeyLower == "content-type" && slices.Contains(methodsWithoutRequestBody, tlsData.requestMethod)
+			isContentLength := headerKeyLower == "content-length"
+			isTlsHeader := strings.HasPrefix(headerKeyLower, "x-tls")
+
+			if isContentType || isContentLength || isTlsHeader {
+				continue
+			}
+
+			for _, value := range headerValues {
+				req.Header.Set(headerKey, value)
 			}
 		}
 	}
