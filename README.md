@@ -1,12 +1,12 @@
-# TlsApi
+# 🔒 TlsApi
 
 A wrapper for [tls-client](https://github.com/bogdanfinn/tls-client) library.
 
-## Description
+## 📝 Description
 
-An API that forwards your http requests using a custom TLS fingerprint.
+An API that forwards your HTTP requests using a custom TLS fingerprint.
 
-## Installation
+## 🚀 Installation
 
 1. `git clone https://github.com/brianxor/tls-api.git`
 2. `cd tls-api`
@@ -15,114 +15,90 @@ An API that forwards your http requests using a custom TLS fingerprint.
 > [!TIP]
 > Configure the API server host and port through `.env` file.
 
-## Documentation
+## 📚 Documentation
 
-Endpoint: `/tls/forward`
+### Endpoint: `/tls/forward`
+### Method: `POST`
 
-Method: `POST`
+### Headers:
 
-Headers:
-```
-x-tls-url
-x-tls-method
-x-tls-proxy
-x-tls-profile
-x-tls-client-timeout
-x-tls-follow-redirects
-x-tls-force-http1
-x-tls-with-random-extension-order
-x-tls-header-order
-x-tls-pseudo-header-order
-```
+### Headers:
 
-If the request requires a body, you can simply enter it as the request body, not in header.
+| Header | Description |
+|--------|-------------|
+| `x-tls-url` | 🌐 Request URL |
+| `x-tls-method` | 📮 Request method |
+| `x-tls-proxy` | 🔄 Proxy settings |
+| `x-tls-profile` | 👤 TLS client profile |
+| `x-tls-client-timeout` | ⏱️ HTTP client timeout |
+| `x-tls-follow-redirects` | 🔀 Follow redirects |
+| `x-tls-force-http1` | 🔌 Force HTTP1 |
+| `x-tls-insecure-skip-verify` | 🚫 Skip SSL verification |
+| `x-tls-with-random-extension-order` | 🎲 Randomize extensions order |
+| `x-tls-header-order` | 📋 Header order |
+| `x-tls-pseudo-header-order` | 📑 Pseudo header order |
 
-### x-tls-url
+> [!NOTE]
+> If the request requires a body, you can simply enter it as the request body, not in header.
 
-- This header will configure what request url the request is going to use.
+### Detailed Header Descriptions
 
-Required: `true`
+#### x-tls-url
+- 🔍 Configures the request URL
+- Required: `true`
 
-### x-tls-method
+#### x-tls-method
+- 🛠️ Configures the request method
+- Required: `true`
 
-- This header will configure what request method the request is going to use
+#### x-tls-proxy
+- 🔒 Configures the proxy for the request
+- Required: `false`
+- Formats:
+    - `ip:port:user:pass`
+    - `ip:port`
 
-Required: `true`
+#### x-tls-profile
+- 👥 Configures the TLS client profile
+- Required: `true`
+- Type: `string`
+- Available profiles: [See here](https://github.com/bogdanfinn/tls-client/blob/18abae60034c6d510a17b62c936efafdf53ebb80/profiles/profiles.go#L10)
 
-### x-tls-proxy
-
-- This header will configure what proxy the request is going to use. 
-
-Required: `false`
-
-You can enter the proxy in the following formats:
-
-- `ip:port:user:pass`
-- `ip:port`
-
-Proxy will be formatted automatically.
-
-### x-tls-profile
-
-This header will configure what TLS client profile the request is going to use.
-
-Required: `true`
-
-Type: `string`
-
-See [profiles](https://github.com/bogdanfinn/tls-client/blob/18abae60034c6d510a17b62c936efafdf53ebb80/profiles/profiles.go#L10) for a list of available TLS profiles.
-
-### x-tls-client-timeout
-
-This header will configure what timeout the HTTP client is going to use.
-
+#### x-tls-client-timeout
+- ⏳ Configures the HTTP client timeout
 - Required: `true`
 - Default: `30`
 
-### x-tls-follow-redirects
-
-This header will configure if the request should follow redirects or not.
-
+#### x-tls-follow-redirects
+- 🔗 Configures if the request should follow redirects
 - Required: `true`
 - Default: `true`
 
-### x-tls-force-http1
-
-This header will configure if the request should force HTTP1 use or not.
-
+#### x-tls-force-http1
+- 🔒 Configures if the request should force HTTP1 use
 - Required: `true`
 - Default: `false`
 
-### x-tls-insecure-skip-verify
-
-This header will configure if the client should skip SSL certificate verification.
-
+#### x-tls-insecure-skip-verify
+- 🚫 Configures if the client should skip SSL certificate verification
 - Required: `true`
 - Default: `false`
 
-### x-tls-with-random-extension-order
-
-This header will configure if the client should randomize extensions order.
-
+#### x-tls-with-random-extension-order
+- 🔀 Configures if the client should randomize extensions order
 - Required: `true`
 - Default: `true`
 
-### x-tls-header-order
-
-This header will configure the header order of the request.
-
+#### x-tls-header-order
+- 📊 Configures the header order of the request
 - Required: `true`
+- Format: String with headers separated by commas (`,`)
 
-They must be provided as a string, all separated by a comma (`,`).
-
-### x-tls-pseudo-header-order
-
-This header will configure the pseudo header order of the request.
-
+#### x-tls-pseudo-header-order
+- 📈 Configures the pseudo header order of the request
 - Required: `true`
+- Format: String with headers separated by commas (`,`)
 
-They must be provided as a string, all separated by a comma (`,`).
+## 🙏 Credits
 
-## Credits
-
-Credits to [bogdanfinn](https://github.com/bogdanfinn/) for making the awesome [tls-client](https://github.com/bogdanfinn/tls-client).
+Special thanks to [bogdanfinn](https://github.com/bogdanfinn/) for creating the awesome [tls-client](https://github.com/bogdanfinn/tls-client) library.
