@@ -98,8 +98,6 @@ func doRequest(tlsData *tlsData) (*requestResponse, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-
 	body, err := utils.DecompressBody(resp)
 
 	if err != nil {

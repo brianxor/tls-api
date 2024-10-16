@@ -24,6 +24,8 @@ func FormatProxy(proxy string) (string, error) {
 }
 
 func DecompressBody(resp *http.Response) ([]byte, error) {
+	defer resp.Body.Close()
+
 	contentEncoding := resp.Header.Get("Content-Encoding")
 
 	var decompressedBody []byte
@@ -66,8 +68,6 @@ func handleGzip(body io.Reader) ([]byte, error) {
 
 func handleDeflate(body io.Reader) ([]byte, error) {
 	flateReader := flate.NewReader(body)
-
-	defer flateReader.Close()
 
 	data, err := io.ReadAll(flateReader)
 
