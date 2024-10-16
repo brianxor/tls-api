@@ -98,6 +98,13 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 - Required: `true`
 - Format: String with headers separated by commas (`,`)
 
+## 🐛 Report Issues
+
+Found a bug? Please [open an issue](https://github.com/brianxor/tls-api/issues).
+
+By reporting an issue you help improving the project.
+
 ## 🙏 Credits
 
 Special thanks to [bogdanfinn](https://github.com/bogdanfinn/) for creating the awesome [tls-client](https://github.com/bogdanfinn/tls-client) library.
+
