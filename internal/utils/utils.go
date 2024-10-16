@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"github.com/andybalholm/brotli"
+	http "github.com/bogdanfinn/fhttp"
 	"io"
 	"strings"
 )
@@ -22,7 +23,31 @@ func FormatProxy(proxy string) (string, error) {
 	}
 }
 
-func HandleGzip(body io.Reader) ([]byte, error) {
+func DecompressBody(resp *http.Response) ([]byte, error) {
+	contentEncoding := resp.Header.Get("Content-Encoding")
+
+	var decompressedBody []byte
+	var err error
+
+	switch contentEncoding {
+	case "gzip":
+		decompressedBody, err = handleGzip(resp.Body)
+	case "deflate":
+		decompressedBody, err = handleDeflate(resp.Body)
+	case "br":
+		decompressedBody, err = handleBrotli(resp.Body)
+	default:
+		return io.ReadAll(resp.Body)
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return decompressedBody, nil
+}
+
+func handleGzip(body io.Reader) ([]byte, error) {
 	gzipReader, err := gzip.NewReader(body)
 	if err != nil {
 		return nil, err
@@ -39,7 +64,7 @@ func HandleGzip(body io.Reader) ([]byte, error) {
 	return data, nil
 }
 
-func HandleDeflate(body io.Reader) ([]byte, error) {
+func handleDeflate(body io.Reader) ([]byte, error) {
 	flateReader := flate.NewReader(body)
 
 	defer flateReader.Close()
@@ -53,7 +78,7 @@ func HandleDeflate(body io.Reader) ([]byte, error) {
 	return data, nil
 }
 
-func HandleBrotli(body io.Reader) ([]byte, error) {
+func handleBrotli(body io.Reader) ([]byte, error) {
 	brotliReader := brotli.NewReader(body)
 
 	data, err := io.ReadAll(brotliReader)
