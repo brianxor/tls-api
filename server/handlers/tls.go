@@ -280,8 +280,9 @@ func extractClientProfile(ctx fiber.Ctx, tlsData *tlsData) error {
 func extractClientTimeout(ctx fiber.Ctx, tlsData *tlsData) error {
 	clientTimeout := ctx.Get(tlsClientTimeoutHeaderKey)
 
+	// Set to 30 as default value
 	if clientTimeout == "" {
-		return fmt.Errorf("no %s", tlsClientTimeoutHeaderKey)
+		clientTimeout = "30"
 	}
 
 	tlsClientTimeout, err := strconv.Atoi(clientTimeout)
@@ -298,8 +299,9 @@ func extractClientTimeout(ctx fiber.Ctx, tlsData *tlsData) error {
 func extractFollowRedirects(ctx fiber.Ctx, tlsData *tlsData) error {
 	followRedirects := ctx.Get(tlsFollowRedirectsHeaderKey)
 
+	// Set to true as default value
 	if followRedirects == "" {
-		return fmt.Errorf("no %s", tlsFollowRedirectsHeaderKey)
+		followRedirects = "true"
 	}
 
 	tlsFollowRedirects, err := strconv.ParseBool(followRedirects)
@@ -316,8 +318,9 @@ func extractFollowRedirects(ctx fiber.Ctx, tlsData *tlsData) error {
 func extractForceHttp1(ctx fiber.Ctx, tlsData *tlsData) error {
 	forceHttp1 := ctx.Get(tlsForceHttp1HeaderKey)
 
+	// Set to false as default value
 	if forceHttp1 == "" {
-		return fmt.Errorf("no %s", tlsForceHttp1HeaderKey)
+		forceHttp1 = "false"
 	}
 
 	tlsForceHttp1, err := strconv.ParseBool(forceHttp1)
@@ -334,8 +337,9 @@ func extractForceHttp1(ctx fiber.Ctx, tlsData *tlsData) error {
 func extractInsecureSkipVerify(ctx fiber.Ctx, tlsData *tlsData) error {
 	insecureSkipVerify := ctx.Get(tlsInsecureSkipVerifyHeaderKey)
 
+	// Set to false as default value
 	if insecureSkipVerify == "" {
-		return fmt.Errorf("no %s", tlsInsecureSkipVerifyHeaderKey)
+		insecureSkipVerify = "false"
 	}
 
 	tlsInsecureSkipVerify, err := strconv.ParseBool(insecureSkipVerify)
@@ -352,8 +356,9 @@ func extractInsecureSkipVerify(ctx fiber.Ctx, tlsData *tlsData) error {
 func extractWithRandomExtensionOrder(ctx fiber.Ctx, tlsData *tlsData) error {
 	withRandomExtensionOrder := ctx.Get(tlsWithRandomExtensionOrderHeaderKey)
 
+	// Set to true as default value
 	if withRandomExtensionOrder == "" {
-		return fmt.Errorf("no %s", tlsWithRandomExtensionOrderHeaderKey)
+		withRandomExtensionOrder = "true"
 	}
 
 	tlsWithRandomExtensionOrder, err := strconv.ParseBool(withRandomExtensionOrder)
@@ -365,29 +370,6 @@ func extractWithRandomExtensionOrder(ctx fiber.Ctx, tlsData *tlsData) error {
 	tlsData.tlsWithRandomExtensionOrder = tlsWithRandomExtensionOrder
 
 	return err
-}
-
-func setRequestHeaders(tlsData *tlsData, req *http.Request) {
-	if len(tlsData.requestHeaders) > 0 {
-		for headerKey, headerValues := range tlsData.requestHeaders {
-			headerKeyLower := strings.ToLower(headerKey)
-
-			isContentType := headerKeyLower == "content-type" && slices.Contains(methodsWithoutRequestBody, tlsData.requestMethod)
-			isContentLength := headerKeyLower == "content-length"
-			isTlsHeader := strings.HasPrefix(headerKeyLower, "x-tls")
-
-			if isContentType || isContentLength || isTlsHeader {
-				continue
-			}
-
-			for _, value := range headerValues {
-				req.Header.Set(headerKey, value)
-			}
-		}
-	}
-
-	req.Header[http.HeaderOrderKey] = tlsData.tlsHeaderOrder
-	req.Header[http.PHeaderOrderKey] = tlsData.tlsPseudoHeaderOrder
 }
 
 func extractHeaderOrder(ctx fiber.Ctx, tlsData *tlsData) error {
@@ -430,6 +412,29 @@ func extractPseudoHeaderOrder(ctx fiber.Ctx, tlsData *tlsData) error {
 	return nil
 }
 
+func setRequestHeaders(tlsData *tlsData, req *http.Request) {
+	if len(tlsData.requestHeaders) > 0 {
+		for headerKey, headerValues := range tlsData.requestHeaders {
+			headerKeyLower := strings.ToLower(headerKey)
+
+			isContentType := headerKeyLower == "content-type" && slices.Contains(methodsWithoutRequestBody, tlsData.requestMethod)
+			isContentLength := headerKeyLower == "content-length"
+			isTlsHeader := strings.HasPrefix(headerKeyLower, "x-tls")
+
+			if isContentType || isContentLength || isTlsHeader {
+				continue
+			}
+
+			for _, value := range headerValues {
+				req.Header.Set(headerKey, value)
+			}
+		}
+	}
+
+	req.Header[http.HeaderOrderKey] = tlsData.tlsHeaderOrder
+	req.Header[http.PHeaderOrderKey] = tlsData.tlsPseudoHeaderOrder
+}
+
 func getResponseHeaders(resp *http.Response) map[string]string {
 	responseHeaders := make(map[string]string)
 
@@ -470,16 +475,7 @@ func setResponseCookies(ctx fiber.Ctx, reqResponse *requestResponse) {
 				HTTPOnly: cookie.HttpOnly,
 			}
 
-			switch cookie.SameSite {
-			case http.SameSiteLaxMode:
-				fiberCookie.SameSite = "Lax"
-			case http.SameSiteStrictMode:
-				fiberCookie.SameSite = "Strict"
-			case http.SameSiteNoneMode:
-				fiberCookie.SameSite = "None"
-			default:
-				fiberCookie.SameSite = ""
-			}
+			fiberCookie.SameSite = utils.TranslateSameSite(cookie.SameSite)
 
 			ctx.Cookie(fiberCookie)
 		}
