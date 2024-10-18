@@ -10,6 +10,19 @@ import (
 	"strings"
 )
 
+func TranslateSameSite(policy http.SameSite) string {
+	switch policy {
+	case http.SameSiteLaxMode:
+		return "Lax"
+	case http.SameSiteStrictMode:
+		return "Strict"
+	case http.SameSiteNoneMode:
+		return "None"
+	default:
+		return ""
+	}
+}
+
 func FormatProxy(proxy string) (string, error) {
 	proxyParts := strings.Split(proxy, ":")
 
