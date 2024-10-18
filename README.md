@@ -44,59 +44,59 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 
 #### x-tls-url
 - 🔍 Configures the request URL
-- Required: `true`
+- Optional: `false`
 
 #### x-tls-method
 - 🛠️ Configures the request method
-- Required: `true`
+- Optional: `false`
 
 #### x-tls-proxy
 - 🔒 Configures the proxy for the request
-- Required: `false`
+- Optional: `true`
 - Formats:
     - `ip:port:user:pass`
     - `ip:port`
 
 #### x-tls-profile
 - 👥 Configures the TLS client profile
-- Required: `true`
+- Optional: `false`
 - Type: `string`
 - Available profiles: [See here](https://github.com/bogdanfinn/tls-client/blob/18abae60034c6d510a17b62c936efafdf53ebb80/profiles/profiles.go#L10)
 
 #### x-tls-client-timeout
 - ⏳ Configures the HTTP client timeout
-- Required: `true`
+- Optional: `true`
 - Default: `30`
 
 #### x-tls-follow-redirects
 - 🔗 Configures if the request should follow redirects
-- Required: `true`
+- Optional: `true`
 - Default: `true`
 
 #### x-tls-force-http1
 - 🔒 Configures if the request should force HTTP1 use
-- Required: `true`
+- Optional: `true`
 - Default: `false`
 
 #### x-tls-insecure-skip-verify
 - 🚫 Configures if the client should skip SSL certificate verification
-- Required: `true`
+- Optional: `true`
 - Default: `false`
 
 #### x-tls-with-random-extension-order
 - 🔀 Configures if the client should randomize extensions order
-- Required: `true`
+- Optional: `true`
 - Default: `true`
 
 #### x-tls-header-order
 - 📊 Configures the header order of the request
-- Required: `true`
-- Format: String with headers separated by commas (`,`)
+- Optional: `false`
+- Format: String with headers key separated by commas (`,`)
 
 #### x-tls-pseudo-header-order
 - 📈 Configures the pseudo header order of the request
-- Required: `true`
-- Format: String with headers separated by commas (`,`)
+- Optional: `false`
+- Format: String with headers key separated by commas (`,`)
 
 ## 🐛 Report Issues
 
