@@ -1,3 +1,5 @@
+[![CapSolver](assets/CapSolver.png)](https://www.capsolver.com/?utm_source=github&utm_medium=repo&utm_campaign=scraping&utm_term=tls-api)
+
 # 🔒 TlsApi
 
 A wrapper for [tls-client](https://github.com/bogdanfinn/tls-client) library.
@@ -43,6 +45,7 @@ An API that forwards your HTTP requests using a custom TLS fingerprint.
 ## 🐛 Report Issues
 
 Found a bug? Please [open an issue](https://github.com/brianxor/tls-api/issues).
+
 
 By reporting an issue you help improve the project.
 
