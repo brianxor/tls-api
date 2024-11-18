@@ -51,4 +51,4 @@ By reporting an issue you help improve the project.
 
 ## 🙏 Credits
 
-Special thanks to [bogdanfinn](https://github.com/bogdanfinn/) for creating the awesome [tls-client](https://github.com
+Special thanks to [bogdanfinn](https://github.com/bogdanfinn/) for creating the awesome [tls-client](https://github.com/bogdanfinn/tls-client)
